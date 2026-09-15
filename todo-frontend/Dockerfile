@@ -4,7 +4,7 @@
 FROM node:8 AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm pkg delete scripts.prepare >/dev/null 2>&1 || true && npm install
+RUN npm pkg delete scripts.prepare >/dev/null 2>&1 || true && if [ -f package-lock.json ]; then npm ci || npm ci --legacy-peer-deps; else npm install; fi
 COPY . .
 RUN node_modules/.bin/bower install --allow-root && node_modules/.bin/gulp build
 
